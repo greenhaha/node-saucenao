@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼方のE栈-搜图</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <nav class="navbar  navbar-light bg-light page-header">
+        <div class="container-fluid">
+          <span class="navbar-text" style="color: white;">
+            彼方のE栈-搜图
+          </span>
+        </div>
+    </nav>
+    <div class="container page-container">
+        <div class="row page-formContainer">
+            <div class="card">
+                <div class="card-body">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">图源模式</label></label>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" checked disabled>
+                                        <label class="form-check-label" for="flexCheckDisabled">
+                                            SauceNAO
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled"  disabled>
+                                        <label class="form-check-label" for="flexCheckCheckedDisabled">
+                                            Ascii2D
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled"  disabled>
+                                        <label class="form-check-label" for="flexCheckCheckedDisabled">
+                                            TraceMoe
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="exampleInputEmail1" class="form-label">上传图片</label></label>
+                        <div class="input-group mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="file" class="form-control" id="inputGroupFile02">
+                                </div>
+                            </div>
+                        </div>
+                    <button type="button" class="btn btn-primary search-button">搜索</button>
+                </div>
+            </div>
+        </div>
+        <!-- Content here -->
+        <div class="row page-searchContainer">
+            <div class="card response-card">
+                <div class="card-body">
+                    <h4 style="text-align: center;">搜索数据</h4>
+                    <div class="response-data">
+                        123
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<script src="./jquery.js"></script>
+<!-- <script src="./index.js"></script> -->
+<script>
+    var file
+    $("#inputGroupFile02").on('change', function(){
+        file = this.files[0];
+        // var form = new FormData();
+        
+    })
+    $(".search-button").click(async function(){
+        console.log(file)
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('db', 999)
+        formData.append('numres', 3)
+        formData.append('output_type', 2)
+        formData.append('api_key', '74fdc34e80188b7d05da417820a1ded8d45f857c')
+        console.log(formData)
+        var response = await new Promise((resolve, reject) => {
+            // formData.submit('https://saucenao.com/search.php', (err, res) => {
+            //     if(err) reject(err)
+            //     else resolve(res)
+            // })
+            $.ajax({
+                url: "https://saucenao.com/search.php",
+                type: "POST",
+                data: formData,
+                contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                processData: false, // NEEDED, DON'T OMIT THIS
+                crossDomain : true,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success:function(data){
+                    console.log(data)
+                }
+            });
+        })
+
+        try {
+        response.body = ''
+        response.setEncoding('utf8')
+        response.on('data', chunk => response.body += chunk)
+        await new Promise(r => response.on('end', r))
+
+        response.json = JSON.parse(response.body)
+        } catch (err) {
+        err.response = response
+        throw err
+        }
+        console.log(response.json)
+    });
+</script>
+</html>

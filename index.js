@@ -3,6 +3,7 @@ const stream = require('stream')
 const fs = require('fs')
 const FormData = require('form-data')
 const input = './1.jpg'
+
 async function getSauce(input, options) {
     let form = new FormData()
     if(Object(options) === options)
